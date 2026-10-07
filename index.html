@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Farol de Autoavaliação — Demarco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#f4f5f7;
+  --bg-1:#eceef1;
+  --bg-2:#e3e6eb;
+  --panel:rgba(255,255,255,.55);
+  --panel-2:rgba(255,255,255,.85);
+  --border:rgba(20,26,38,.09);
+  --border-soft:rgba(20,26,38,.055);
+  --text-hi:#1c212b;
+  --text-mid:#4d5560;
+  --text-low:#6b7280;
+  --accent-a:#4f6f93;
+  --accent-b:#8a7ca8;
+  --good:#2f8f63;
+  --good-dim:#1f6b49;
+  --warn:#b8791f;
+  --bad:#b8483f;
+  --na:#9aa1ac;
+  --radius-lg:22px;
+  --radius-md:16px;
+  --radius-sm:10px;
+  --shadow-card:0 20px 45px -26px rgba(30,41,59,.18), 0 1px 0 rgba(255,255,255,.75) inset;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;}
+body{
+  min-height:100vh;
+  background:var(--bg-0);
+  color:var(--text-hi);
+  font-family:'Inter',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  overflow-x:hidden;
+  position:relative;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(79,111,147,.22); color:#1c212b;}
+
+/* ---------- background layers ---------- */
+#bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(138,124,168,.09), transparent 42%),
+    radial-gradient(circle at 88% 6%, rgba(79,111,147,.08), transparent 38%),
+    radial-gradient(circle at 82% 92%, rgba(138,124,168,.07), transparent 45%),
+    radial-gradient(circle at 6% 88%, rgba(79,111,147,.06), transparent 40%),
+    linear-gradient(160deg, var(--bg-1) 0%, var(--bg-0) 45%, #eef1f4 100%);
+}
+#bg::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity:.6;
+  mix-blend-mode:multiply;
+}
+.orb{
+  position:fixed; z-index:0; border-radius:50%; filter:blur(70px); pointer-events:none;
+  opacity:.5;
+}
+.orb-a{ width:520px; height:520px; top:-160px; left:-120px; background:radial-gradient(circle, rgba(138,124,168,.20), transparent 70%); animation: drift 26s ease-in-out infinite; }
+.orb-b{ width:460px; height:460px; bottom:-140px; right:-100px; background:radial-gradient(circle, rgba(79,111,147,.18), transparent 70%); animation: drift 32s ease-in-out infinite reverse; }
+@keyframes drift{
+  0%,100%{ transform:translate(0,0) scale(1); }
+  50%{ transform:translate(30px,-24px) scale(1.06); }
+}
+
+/* ---------- layout shell ---------- */
+.wrap{ position:relative; z-index:1; max-width:1320px; margin:0 auto; padding:22px 20px 40px; }
+@media (min-width:900px){ .wrap{ padding:24px 40px 40px; } }
+
+header.top{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:20px;
+  flex-wrap:wrap; margin-bottom:20px;
+}
+.brand{ display:flex; flex-direction:column; gap:6px; }
+.brand .mark{
+  display:flex; align-items:center; gap:10px;
+  font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:.72rem;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--text-low);
+}
+.brand .mark .dot{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--good); box-shadow:0 0 0 0 rgba(47,143,99,.5);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%{ box-shadow:0 0 0 0 rgba(47,143,99,.45); }
+  70%{ box-shadow:0 0 0 8px rgba(47,143,99,0); }
+  100%{ box-shadow:0 0 0 0 rgba(47,143,99,0); }
+}
+.brand h1{
+  margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600;
+  font-size:clamp(1.3rem,2.4vw,1.7rem); letter-spacing:-.01em; color:var(--text-hi);
+}
+.brand .sub{ color:var(--text-mid); font-size:.86rem; }
+
+.meta{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; text-align:right; }
+.meta .clock{
+  font-family:'Space Grotesk',sans-serif; font-variant-numeric:tabular-nums;
+  font-size:1.05rem; color:var(--text-hi); letter-spacing:.02em;
+}
+.meta .period{
+  font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-low);
+}
+.meta .updated{
+  font-size:.72rem; color:var(--text-low); display:inline-flex; align-items:center; gap:6px;
+}
+.meta .updated .udot{ width:6px; height:6px; border-radius:50%; background:var(--good); flex:none; }
+
+/* ---------- tabs ---------- */
+.tabbar{
+  display:inline-flex; gap:4px; padding:5px; border-radius:999px;
+  background:var(--panel); border:1px solid var(--border-soft);
+  box-shadow: var(--shadow-card);
+  max-width:100%; overflow-x:auto; min-width:0;
+  scrollbar-width:none;
+}
+.tabbar::-webkit-scrollbar{ display:none; }
+.tabbar button{
+  appearance:none; border:0; cursor:pointer; background:transparent; color:var(--text-mid);
+  font-family:'Inter',sans-serif; font-weight:600; font-size:.86rem;
+  padding:9px 18px; border-radius:999px; transition:color .25s var(--ease);
+  white-space:nowrap;
+}
+.tabbar button.active{ color:#f7f8fa; }
+.tabbar{ position:relative; }
+.tabbar .pill{
+  position:absolute; top:5px; bottom:5px; left:5px; width:0;
+  border-radius:999px;
+  background:linear-gradient(120deg, var(--accent-a), var(--accent-b));
+  transition: transform .38s var(--ease), width .38s var(--ease);
+  z-index:0;
+}
+.tabbar button{ position:relative; z-index:1; }
+
+.tabs-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px;}
+.subtabbar{ display:inline-flex; gap:2px; padding:4px; border-radius:14px; background:rgba(20,26,38,.035); border:1px solid var(--border-soft); }
+.subtabbar button{
+  appearance:none; border:0; cursor:pointer; background:transparent; color:var(--text-mid);
+  font-family:'Inter',sans-serif; font-weight:600; font-size:.8rem;
+  padding:7px 16px; border-radius:10px; transition:all .22s var(--ease);
+}
+.subtabbar button.active{ background:var(--panel-2); color:var(--text-hi); box-shadow:0 1px 3px rgba(30,41,59,.10); }
+
+/* ---------- views ---------- */
+.view{ display:none; }
+.view.active{ display:block; }
+.subview{ display:none; }
+.subview.active{ display:block; }
+
+.enter{ animation: enterUp .6s var(--ease) both; }
+@keyframes enterUp{
+  from{ opacity:0; transform:translateY(14px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.stagger > *{ animation: enterUp .6s var(--ease) both; }
+.stagger > *:nth-child(1){ animation-delay:.02s }
+.stagger > *:nth-child(2){ animation-delay:.08s }
+.stagger > *:nth-child(3){ animation-delay:.14s }
+.stagger > *:nth-child(4){ animation-delay:.2s }
+.stagger > *:nth-child(5){ animation-delay:.26s }
+
+/* ---------- filter pills ---------- */
+.filterbar{ margin-bottom:16px; }
+.filterbar .flabel{
+  font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--text-low);
+  margin:0 0 4px; font-weight:600;
+}
+.filterbar .fhint{
+  font-size:.74rem; color:var(--text-low); margin:0 0 10px; opacity:.85;
+}
+.chips{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+
+.unitfilter{ margin-top:14px; display:flex; flex-direction:column; gap:6px; max-width:340px; }
+.unitfilter .ulabel{
+  font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-low); font-weight:600;
+}
+.unitselect{
+  appearance:none; cursor:pointer; font-family:'Inter',sans-serif; font-weight:600; font-size:.82rem;
+  color:var(--text-hi); background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
+  padding:9px 34px 9px 14px; transition:border-color .2s var(--ease);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%234d5560' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 8l5 5 5-5'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center; background-size:14px;
+}
+.unitselect:hover{ border-color:rgba(20,26,38,.22); }
+.unitselect:focus{ outline:none; border-color:rgba(79,111,147,.5); box-shadow:0 0 0 3px rgba(79,111,147,.14); }
+.chip{
+  appearance:none; cursor:pointer; user-select:none;
+  border:1px solid var(--border); background:var(--panel);
+  color:var(--text-mid); font-family:'Inter',sans-serif; font-weight:600; font-size:.8rem;
+  padding:8px 14px; border-radius:999px; transition:all .22s var(--ease);
+  display:inline-flex; align-items:center; gap:8px;
+}
+.chip .n{ opacity:.55; font-weight:500; font-variant-numeric:tabular-nums; font-size:.74em;}
+.chip:hover{ border-color:rgba(20,26,38,.22); color:var(--text-hi); }
+.chip.on{
+  background:linear-gradient(120deg, rgba(79,111,147,.14), rgba(138,124,168,.14));
+  border-color:rgba(79,111,147,.4); color:var(--text-hi);
+  box-shadow:0 0 0 1px rgba(255,255,255,.5) inset, 0 8px 18px -10px rgba(79,111,147,.28);
+}
+.chip.locked{ opacity:.55; cursor:not-allowed; }
+.chip.locked:hover{ border-color:var(--border); color:var(--text-mid); }
+.chip.empty{ opacity:.32; cursor:not-allowed; text-decoration:line-through; }
+.chip.shake{ animation: shake .32s linear; }
+@keyframes shake{
+  0%,100%{ transform:translateX(0); }
+  25%{ transform:translateX(-4px); }
+  75%{ transform:translateX(4px); }
+}
+.chip-reset{
+  border:1px dashed var(--border); color:var(--text-low); background:transparent;
+  font-size:.74rem; padding:7px 12px;
+}
+.chip-reset:hover{ color:var(--text-hi); border-color:var(--text-low); }
+
+/* ---------- hero ---------- */
+.herorow{
+  display:grid; grid-template-columns:minmax(260px,1.15fr) 1fr; gap:22px; margin-bottom:24px;
+}
+@media (max-width:820px){ .herorow{ grid-template-columns:1fr; } }
+
+.card{
+  position:relative; border-radius:var(--radius-lg);
+  background:linear-gradient(165deg, var(--panel-2), var(--panel));
+  border:1px solid var(--border); box-shadow:var(--shadow-card);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  overflow:hidden;
+}
+.card::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:1px;
+  background:linear-gradient(160deg, rgba(255,255,255,.9), rgba(255,255,255,0) 40%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+}
+
+.hero-card{ padding:34px 30px 28px; display:flex; flex-direction:column; gap:18px; min-height:280px; }
+.lcp-hero{ margin-bottom:20px; }
+.hero-card .sweep{
+  position:absolute; top:50%; left:50%; width:640px; height:640px; margin:-320px 0 0 -320px;
+  background:conic-gradient(from 0deg, transparent 0deg, rgba(79,111,147,.07) 40deg, transparent 90deg, transparent 300deg, rgba(138,124,168,.07) 340deg, transparent 360deg);
+  animation:spin 9s linear infinite; pointer-events:none;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.hero-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; position:relative; z-index:1;}
+.hero-label{
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--text-low); font-weight:700;
+}
+.hero-label span{ color:var(--text-mid); font-weight:500; letter-spacing:.06em; text-transform:none; display:block; margin-top:4px; font-size:.78rem;}
+.hero-num-wrap{ position:relative; z-index:1; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;}
+.hero-num{
+  font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:-.03em; line-height:.86;
+  font-size:clamp(4.6rem, 12vw, 9.5rem);
+  background:linear-gradient(120deg, var(--text-hi) 0%, var(--accent-a) 55%, var(--accent-b) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  white-space:nowrap;
+}
+.hero-num.empty{ background:none; -webkit-text-fill-color:var(--text-low); color:var(--text-low); font-size:clamp(3rem,7vw,5rem);}
+.hero-suffix{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(1.4rem,2.6vw,2.2rem); color:var(--text-mid);}
+.hero-foot{ position:relative; z-index:1; color:var(--text-mid); font-size:.86rem; line-height:1.5; max-width:46ch;}
+.hero-stats{ position:relative; z-index:1; display:flex; gap:22px; flex-wrap:wrap; margin-top:auto; padding-top:6px;}
+.stat{ display:flex; flex-direction:column; gap:2px; }
+.stat b{ font-family:'Space Grotesk',sans-serif; font-size:1.3rem; font-weight:600; color:var(--text-hi);}
+.stat span{ font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text-low);}
+.stat.ok b{ color:var(--good); }
+.stat.nok b{ color:var(--bad); }
+.stat.na b{ color:var(--na); }
+
+/* ---------- top row (hero + charts merged) ---------- */
+.toprow{ display:grid; grid-template-columns:1fr; gap:18px; margin-bottom:20px; align-items:stretch; }
+@media (min-width:900px){
+  .toprow{ grid-template-columns:1fr 1fr; }
+  .toprow > .hero-card{ grid-column:1 / -1; }
+}
+@media (min-width:1180px){
+  .toprow{ grid-template-columns:minmax(300px,1.05fr) 1fr 1fr; gap:20px; }
+  .toprow > .hero-card{ grid-column:auto; padding:22px 20px 18px; min-height:0; gap:11px; }
+  .toprow .hero-num{ font-size:clamp(2.5rem, 4vw, 4.3rem); }
+  .toprow .hero-stats{ gap:16px; }
+  .toprow-panel{ padding:18px 18px 14px; }
+  .toprow-panel .phint{ margin-bottom:8px; }
+  .toprow-panel .barlist{ gap:8px; }
+  .toprow-panel .baritem{ grid-template-columns:70px 1fr 44px; gap:10px; }
+}
+
+.panel{ padding:22px 22px 18px; }
+.panel h3{
+  margin:0 0 3px; font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; color:var(--text-hi);
+}
+.panel .phint{ margin:0 0 14px; font-size:.8rem; color:var(--text-low); }
+
+/* "Unidades avaliadas" can hold up to ~90 cards — cap its height so the
+   rest of the page keeps fitting a single screen, with a slim scrollbar. */
+.units-scroll{ max-height:min(38vh, 340px); overflow-y:auto; padding-right:6px; scrollbar-width:thin; scrollbar-color:rgba(20,26,38,.18) transparent; }
+.units-scroll::-webkit-scrollbar{ width:8px; }
+.units-scroll::-webkit-scrollbar-track{ background:transparent; }
+.units-scroll::-webkit-scrollbar-thumb{ background:rgba(20,26,38,.16); border-radius:999px; }
+.units-scroll::-webkit-scrollbar-thumb:hover{ background:rgba(20,26,38,.28); }
+
+/* "Pontos de atenção" can also grow long once the base data has more NOK
+   items — same capped-scroll treatment as "Unidades avaliadas". */
+.attn-scroll{ max-height:min(30vh, 300px); overflow-y:auto; padding-right:6px; scrollbar-width:thin; scrollbar-color:rgba(20,26,38,.18) transparent; }
+.attn-scroll::-webkit-scrollbar{ width:8px; }
+.attn-scroll::-webkit-scrollbar-track{ background:transparent; }
+.attn-scroll::-webkit-scrollbar-thumb{ background:rgba(20,26,38,.16); border-radius:999px; }
+.attn-scroll::-webkit-scrollbar-thumb:hover{ background:rgba(20,26,38,.28); }
+
+/* bar list */
+.barlist{ display:flex; flex-direction:column; gap:14px; }
+.baritem{ display:grid; grid-template-columns:88px 1fr 58px; align-items:center; gap:12px; transition:opacity .35s var(--ease); }
+.baritem .blabel{ font-size:.8rem; font-weight:600; color:var(--text-mid); overflow-wrap:normal; word-break:keep-all;}
+.baritem .btrack{ position:relative; height:10px; border-radius:999px; background:rgba(20,26,38,.08); overflow:hidden; }
+.baritem .bfill{ position:absolute; inset:0 auto 0 0; width:0%; border-radius:999px; transition:width 1s var(--ease), background-color .4s var(--ease), opacity .35s var(--ease); }
+.baritem .bval{ font-family:'Space Grotesk',sans-serif; font-size:.86rem; font-weight:600; text-align:right; color:var(--text-hi); font-variant-numeric:tabular-nums;}
+.baritem.dim{ opacity:.32; }
+.baritem.dim .bfill{ filter:grayscale(.6); }
+
+.fill-good, .fill-warn, .fill-bad{ background:linear-gradient(90deg, #2d3945, #465866); }
+
+/* mini gauges */
+.gaugegrid{ display:flex; flex-wrap:wrap; gap:14px 10px; justify-content:flex-start; }
+.gauge{ width:80px; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.gauge svg{ transform:rotate(-90deg); }
+.gauge .gtrack{ fill:none; stroke:rgba(20,26,38,.10); stroke-width:6; }
+.gauge .gfill{ fill:none; stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset 1s var(--ease), stroke .4s var(--ease); }
+.gauge-center{ position:relative; width:60px; height:60px; }
+.gauge-num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.76rem; color:var(--text-hi);}
+.gauge-label{ font-size:.64rem; text-align:center; color:var(--text-mid); font-weight:600; line-height:1.22; overflow-wrap:normal; word-break:keep-all; max-width:82px;}
+
+/* attention panel */
+.attn-list{ display:flex; flex-direction:column; gap:10px; }
+.attn-item{
+  display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:var(--radius-sm);
+  background:rgba(184,72,63,.08); border:1px solid rgba(184,72,63,.22);
+}
+.attn-dot{ width:8px; height:8px; border-radius:50%; background:var(--bad); flex:none; box-shadow:0 0 12px rgba(184,72,63,.7);}
+.attn-txt{ display:flex; flex-direction:column; gap:1px; min-width:0;}
+.attn-txt b{ font-size:.85rem; color:var(--text-hi); font-weight:600; overflow-wrap:normal; word-break:keep-all;}
+.attn-txt span{ font-size:.74rem; color:var(--text-mid); }
+.attn-tag{
+  margin-left:auto; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; font-weight:700;
+  color:var(--bad); border:1px solid rgba(184,72,63,.4); padding:3px 9px; border-radius:999px; flex:none;
+}
+.empty-state{
+  display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;
+  padding:34px 16px; color:var(--text-mid);
+}
+.empty-state .ico{
+  width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:rgba(47,143,99,.12); border:1px solid rgba(47,143,99,.32); color:var(--good); font-size:1.2rem;
+}
+.empty-state b{ color:var(--text-hi); font-size:.92rem; }
+.empty-state span{ font-size:.8rem; max-width:34ch; }
+
+/* tag cloud (LCP) */
+.tagcloud{ display:flex; flex-wrap:wrap; gap:9px; }
+.unit-group{ margin-bottom:14px; }
+.unit-group:last-child{ margin-bottom:0; }
+.unit-group-h{
+  display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  font-family:'Space Grotesk',sans-serif; font-size:.78rem; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--text-mid);
+}
+.unit-group-h::after{ content:""; flex:1; height:1px; background:var(--border-soft); }
+.unit-group-h .n{ font-weight:500; color:var(--text-low); text-transform:none; letter-spacing:0; font-size:.85em; }
+
+.units-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(162px,1fr)); gap:8px; }
+.unit-card{
+  padding:10px 12px; border-radius:12px; display:flex; flex-direction:column; gap:5px;
+  background:linear-gradient(160deg, rgba(20,26,38,.035), rgba(20,26,38,.01));
+  border:1px solid var(--border-soft); transition:border-color .2s var(--ease), transform .2s var(--ease), background .2s var(--ease);
+}
+.unit-card:hover{ border-color:rgba(20,26,38,.2); transform:translateY(-1px); }
+.unit-card.attn{
+  border-color:rgba(184,72,63,.5);
+  background:linear-gradient(160deg, rgba(184,72,63,.12), rgba(184,72,63,.02));
+}
+.unit-card .uname{
+  font-size:.82rem; font-weight:600; color:var(--text-hi); line-height:1.3;
+  overflow-wrap:normal; word-break:keep-all;
+}
+.ustatus{
+  display:flex; align-items:center; gap:7px; font-size:.72rem; font-weight:600;
+}
+.ustatus .udot{ width:7px; height:7px; border-radius:50%; flex:none; }
+.ustatus.ok{ color:var(--text-low); }
+.ustatus.ok .udot{ background:var(--good); }
+.ustatus.nok{ color:var(--bad); }
+.ustatus.nok .udot{ background:var(--bad); box-shadow:0 0 8px rgba(184,72,63,.7); }
+.uissues{ display:flex; flex-wrap:wrap; gap:6px; }
+.issue-chip{
+  font-size:.72rem; font-weight:700; color:#fff6f5; background:var(--bad);
+  padding:3px 9px; border-radius:999px; overflow-wrap:normal; word-break:keep-all;
+}
+.una{ font-size:.68rem; color:var(--text-low); font-style:italic; overflow-wrap:normal; word-break:keep-all; }
+.tag{
+  font-size:.78rem; font-weight:600; padding:8px 14px; border-radius:999px;
+  border:1px solid var(--border); color:var(--text-mid); background:rgba(20,26,38,.03);
+  display:inline-flex; align-items:center; gap:7px; overflow-wrap:normal; word-break:keep-all;
+}
+.tag .sw{ width:7px; height:7px; border-radius:50%; flex:none;}
+.tag.ok .sw{ background:var(--good); }
+.tag.ok{ color:var(--text-mid); }
+.tag.nok{ border-color:rgba(184,72,63,.45); background:rgba(184,72,63,.1); color:var(--text-hi); }
+.tag.nok .sw{ background:var(--bad); }
+.tag.na{ border-color:rgba(184,121,31,.4); background:rgba(184,121,31,.07); color:var(--text-hi); border-style:dashed; }
+.tag.na .sw{ background:var(--warn); }
+
+.legend{ display:flex; gap:16px; flex-wrap:wrap; margin-top:16px; }
+.legend .li{ display:flex; align-items:center; gap:7px; font-size:.74rem; color:var(--text-low); }
+.legend .sw{ width:8px; height:8px; border-radius:50%; }
+
+/* heatmap (GOPs e Toolkits) */
+.heatwrap{ overflow-x:auto; padding-bottom:2px; position:relative; }
+.heatwrap::after{
+  content:""; position:absolute; top:0; right:0; bottom:2px; width:28px; pointer-events:none;
+  background:linear-gradient(90deg, transparent, var(--panel-2) 92%);
+}
+@media (max-width:720px){ .heatwrap::after{ display:block; } }
+@media (min-width:721px){ .heatwrap::after{ display:none; } }
+.heatmap{ display:flex; flex-direction:column; gap:6px; min-width:520px; }
+.heat-row{ display:grid; align-items:center; gap:6px; }
+.heat-rowlabel{
+  font-size:.78rem; font-weight:600; color:var(--text-mid); padding-right:8px;
+  overflow-wrap:normal; word-break:keep-all;
+}
+.heat-collabel{
+  font-size:.66rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--text-low); text-align:center; padding-bottom:2px;
+}
+.heat-head{ border-bottom:1px solid var(--border-soft); padding-bottom:8px; margin-bottom:2px; }
+.heat-cell{
+  height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+  font-size:.76rem; font-weight:700; border:1px solid transparent;
+  transition:transform .15s var(--ease);
+}
+.heat-cell:hover{ transform:scale(1.04); }
+.heat-cell.heat-good{ background:rgba(47,143,99,.16); border-color:rgba(47,143,99,.35); color:var(--good-dim); }
+.heat-cell.heat-warn{ background:rgba(184,121,31,.14); border-color:rgba(184,121,31,.35); color:#8a5c17; }
+.heat-cell.heat-bad{ background:rgba(184,72,63,.14); border-color:rgba(184,72,63,.35); color:var(--bad); }
+.heat-cell.heat-na{ background:rgba(20,26,38,.045); border-color:var(--border-soft); color:var(--text-low); }
+
+footer.site{
+  position:relative; z-index:1; text-align:center; margin-top:16px; color:var(--text-low); font-size:.76rem;
+  display:flex; flex-direction:column; gap:6px; align-items:center;
+}
+footer.site .line{ width:38px; height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent); }
+
+@media (max-width:520px){
+  .baritem{ grid-template-columns:70px 1fr 50px; }
+  .hero-card{ padding:26px 20px 22px; }
+  .brand .mark{ letter-spacing:.13em; font-size:.66rem; }
+  header.top{ flex-direction:column; }
+  .meta{ align-items:flex-start; text-align:left; }
+}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div class="orb orb-a"></div>
+<div class="orb orb-b"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="mark"><span class="dot"></span> Demarco · Auditoria de Supply Chain</div>
+      <h1>Farol de Autoavaliação</h1>
+      <div class="sub">Painel consolidado — AB InBev Supply Chain Portal</div>
+    </div>
+    <div class="meta">
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="period">Período de referência · Setembro / 2026</div>
+      <div class="updated"><span class="udot"></span>Última atualização do farol · 07/10/2026 às 09:05</div>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <div class="tabbar" id="mainTabs">
+      <span class="pill" id="mainPill"></span>
+      <button data-view="dpo" class="active">Autoavaliação DPO</button>
+      <button data-view="lcp">Autoavaliação LCP</button>
+      <!-- aba oculta fora do periodo de atualizacao de GOPs/Toolkits: para mostrar, tire o "hidden" -->
+      <button data-view="gt" hidden>GOPs e Toolkits</button>
+    </div>
+  </div>
+
+  <!-- ============ DPO VIEW ============ -->
+  <section class="view active" data-view="dpo">
+    <div class="tabs-row">
+      <div class="subtabbar" id="dpoSubTabs">
+        <button data-sub="brasil" class="active">Brasil</button>
+        <button data-sub="paises">Países</button>
+      </div>
+    </div>
+
+    <!-- Brasil -->
+    <div class="subview active" data-sub="brasil" id="dpo-brasil"></div>
+    <!-- Países -->
+    <div class="subview" data-sub="paises" id="dpo-paises"></div>
+  </section>
+
+  <!-- ============ LCP VIEW ============ -->
+  <section class="view" data-view="lcp">
+    <div class="tabs-row">
+      <div class="subtabbar" id="lcpSubTabs">
+        <button data-sub="brasil" class="active">Brasil</button>
+        <button data-sub="las">BU LAS</button>
+      </div>
+    </div>
+
+    <div class="subview active" data-sub="brasil" id="lcp-brasil"></div>
+    <div class="subview" data-sub="las" id="lcp-las"></div>
+  </section>
+
+  <!-- ============ GOPs e Toolkits VIEW ============ -->
+  <section class="view" data-view="gt">
+    <div class="tabs-row">
+      <div class="subtabbar" id="gtSubTabs">
+        <button data-sub="brasil" class="active">Brasil</button>
+        <button data-sub="paises">Países</button>
+      </div>
+    </div>
+
+    <div class="subview active" data-sub="brasil" id="gt-brasil"></div>
+    <div class="subview" data-sub="paises" id="gt-paises"></div>
+  </section>
+
+  <footer class="site">
+    <div class="line"></div>
+    <!-- com a aba GOPs/Toolkits visivel, o texto volta a ser "DPO, LCP e GOPs/Toolkits" -->
+    <span>Gerado a partir dos faróis de autoavaliação DPO e LCP · dados de Setembro/2026</span>
+  </footer>
+
+</div>
+
+<script>
+const DATA = {"dpo":{"brasil":{"pillars":["People","Delivery","Fleet","Management","Planning","Safety","Warehouse"],"geos":{"DIR. CO":[{"location":"DC Brasilia","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Cuiaba","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"N/A"}},{"location":"DC Gama","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"OK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Goiania - AS","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Manaus","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Rondonopolis","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}}],"DIR. NO":[{"location":"DC Belem","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Castelao","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Equatorial","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"OK","Warehouse":"N/A"}},{"location":"DC Fortaleza","pillars":{"People":"NOK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Imperatriz","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Natal","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}}],"DIR. RIO":[{"location":"DC Campos","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Itaperuna","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Jacarepagua","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Macacu","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"N/A"}},{"location":"DC Niteroi","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Nova Friburgo","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"OK","Warehouse":"NOK"}},{"location":"DC Pavuna","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Petropolis","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC RJ Campo Grande","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"N/A"}},{"location":"DC Sao Cristovao","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Vitoria","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Volta Redonda","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}}],"DIR. MG":[{"location":"DC Belo Horizonte","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Alfenas","pillars":{"People":"NOK","Delivery":"OK","Fleet":"OK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Contagem","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Ipatinga","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Pocos de Caldas","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Pouso Alegre","pillars":{"People":"OK","Delivery":"OK","Fleet":"NOK","Management":"OK","Planning":"OK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Santa Luzia","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Sete Lagoas","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Uberaba","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Uberlandia","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Varginha","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}}],"DIR. SP":[{"location":"DC Agudos","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"N/A"}},{"location":"DC Aracatuba","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Araraquara","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Barueri","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Campinas","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Diadema","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Sul SP","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Guarulhos","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Jau","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Salto","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Maua","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Mogi Mirim","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Norte","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Osasco","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Piracicaba","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Praia Grande","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Presidente Prudente","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Riberao Preto","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Sao Jose dos Campos","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Suzano","pillars":{"People":"NOK","Delivery":"OK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"OK","Warehouse":"NOK"}},{"location":"DC Taubate","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}}],"DIR. NE":[{"location":"DC AS Camacari","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"N/A"}},{"location":"DC Cabo","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Campina Grande","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Caruaru","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Feira de Santana","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Guanambi","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Ilheus","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Maceio","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Paraiba","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Recife","pillars":{"People":"NOK","Delivery":"OK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"OK"}},{"location":"DC Salvador","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Lapa","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Sergipe","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Vitoria de Conquista","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"OK"}}],"DIR. SUL":[{"location":"DC Beltrao","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Blumenau","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Camboriu","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Cascavel","pillars":{"People":"NOK","Delivery":"OK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Caxias","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Curitiba","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Floripa","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Foz do Iguacu","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Joinville","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Londrina","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Paranagua","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Pelotas","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"OK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Porto Alegre","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC S J Pinhais","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Santa Cruz","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Santa Maria","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Sapucaia","pillars":{"People":"NOK","Delivery":"OK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"N/A"}}]}},"paises":{"pillars":["People","Delivery","Fleet","Management","Planning","Safety","Warehouse"],"countries":{"ARGENTINA":[{"location":"DC Cordoba","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Mercado Central","pillars":{"People":"NOK","Delivery":"OK","Fleet":"OK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Rosario","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"OK","Warehouse":"NOK"}},{"location":"DC Sante Fe","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Santos Lugares","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Tucuman","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}}],"BOLÍVIA":[{"location":"DC Cochabamba","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC El Alto","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Montero","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Oruro","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Potosi","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"OK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Santa Cruz (Bolivia)","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"N/A"}},{"location":"DC Sucre","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Tarija","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"N/A"}},{"location":"DC Trinidad","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}}],"PARAGUAI":[{"location":"DC Asuncion","pillars":{"People":"NOK","Delivery":"OK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Ciudad del Este","pillars":{"People":"OK","Delivery":"OK","Fleet":"OK","Management":"OK","Planning":"OK","Safety":"OK","Warehouse":"OK"}},{"location":"DC Encarnacion","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Coronel Oviedo","pillars":{"People":"NOK","Delivery":"NOK","Fleet":"NOK","Management":"NOK","Planning":"OK","Safety":"NOK","Warehouse":"NOK"}},{"location":"DC Guarambare","pillars":{"People":"NOK","Delivery":"OK","Fleet":"NOK","Management":"NOK","Planning":"NOK","Safety":"NOK","Warehouse":"NOK"}}]}}},"lcp":{"brasil":[{"pillar":"Inventory Deployment","status":"NOK"},{"pillar":"Order Management","status":"OK"},{"pillar":"Transport Scheduling","status":"NOK"},{"pillar":"Transport Execution","status":"NOK"},{"pillar":"Transport Management","status":"NOK"},{"pillar":"Demand Planning","status":"NOK"},{"pillar":"S\u0026OP","status":"OK"},{"pillar":"SNP","status":"NOK"},{"pillar":"Inventory Policy","status":"NOK"},{"pillar":"Portfolio Management","status":"NOK"},{"pillar":"Innovation","status":"NOK"},{"pillar":"Inbound Transport Execution","status":"NOK"},{"pillar":"Inbound Transport Management","status":"NOK"},{"pillar":"Inbound Transport Scheduling","status":"NOK"},{"pillar":"SC Design","status":"OK"},{"pillar":"Circular Packaging","status":"NOK"},{"pillar":"Materials Planning","status":"NOK"},{"pillar":"Cost \u0026 Cash","status":"OK"},{"pillar":"Management","status":"OK"},{"pillar":"Green Logistics","status":"NOK"},{"pillar":"People","status":"NOK"},{"pillar":"Last Mile Management","status":"NOK"},{"pillar":"CORE","status":"NOK"},{"pillar":"Safety","status":"NOK"},{"pillar":"Warehouse Management","status":"NOK"}],"las":[{"pillar":"Inventory Deployment","status":"NOK"},{"pillar":"Order Management","status":"NOK"},{"pillar":"Transport Scheduling","status":"OK"},{"pillar":"Transport Execution","status":"OK"},{"pillar":"Transport Management","status":"OK"},{"pillar":"Demand Planning","status":"NOK"},{"pillar":"S\u0026OP","status":"NOK"},{"pillar":"SNP","status":"OK"},{"pillar":"Inventory Policy","status":"NOK"},{"pillar":"Portfolio Management","status":"NOK"},{"pillar":"Innovation","status":"NOK"},{"pillar":"Inbound Transport Execution","status":"N/A"},{"pillar":"Inbound Transport Management","status":"N/A"},{"pillar":"Inbound Transport Scheduling","status":"N/A"},{"pillar":"SC Design","status":"OK"},{"pillar":"Circular Packaging","status":"NOK"},{"pillar":"Materials Planning","status":"NOK"},{"pillar":"Cost \u0026 Cash","status":"NOK"},{"pillar":"Management","status":"OK"},{"pillar":"Green Logistics","status":"OK"},{"pillar":"People","status":"NOK"},{"pillar":"Last Mile Management","status":"NOK"},{"pillar":"CORE","status":"NOK"},{"pillar":"Safety","status":"NOK"},{"pillar":"Warehouse Management","status":"NOK"}]},"period":{"month":9,"year":2026,"label":"Setembro / 2026","compact":"Setembro/2026"},"gt":{"brasil":{"pillars":["GOPs","Inventory","Toolkits Segurança"],"geos":{"DIR. CO":[{"location":"DC Brasilia","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Cuiaba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Gama","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Goiania - AS","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Manaus","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Rondonopolis","pillars":{"GOPs":"NOK","Inventory":"OK","Toolkits Segurança":"OK"}}],"DIR. RIO":[{"location":"DC Campos","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Itaperuna","pillars":{"GOPs":"OK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Jacarepagua","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Macacu","pillars":{"GOPs":"NOK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Niteroi","pillars":{"GOPs":"NOK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Nova Friburgo","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Pavuna","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Petropolis","pillars":{"GOPs":"OK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC RJ Campo Grande","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Sao Cristovao","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Vitoria","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Volta Redonda","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}],"DIR. MG":[{"location":"CDL AS Minas","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Alfenas","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Contagem","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Ipatinga","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Pocos de Caldas","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"NOK"}},{"location":"DC Pouso Alegre","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Santa Luzia","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sete Lagoas","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Uberaba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Uberlandia","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Varginha","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}],"DIR. SP":[{"location":"DC Agudos","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Aracatuba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Araraquara","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Barueri","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Campinas","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Diadema","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sul SP","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Guarulhos","pillars":{"GOPs":"OK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Jau","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Salto","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Maua","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Mogi Mirim","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Norte","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Osasco","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Piracicaba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Praia Grande","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Presidente Prudente","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Riberao Preto","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sao Jose dos Campos","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Suzano","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Taubate","pillars":{"GOPs":"NOK","Inventory":"OK","Toolkits Segurança":"OK"}}],"DIR. NE":[{"location":"DC AS Camacari","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Cabo","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Campina Grande","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Caruaru","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Feira de Santana","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Guanambi","pillars":{"GOPs":"NOK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Ilheus","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Maceio","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Paraiba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Recife","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Salvador","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Lapa","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sergipe","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Vitoria de Conquista","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}],"DIR. SUL":[{"location":"DC Beltrao","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Blumenau","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Camboriu","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Cascavel","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Caxias","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Curitiba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Floripa","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Foz do Iguacu","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Joinville","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Londrina","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Paranagua","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Pelotas","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Porto Alegre","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC S J Pinhais","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Santa Cruz","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Santa Maria","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sapucaia","pillars":{"GOPs":"OK","Inventory":"NOK","Toolkits Segurança":"OK"}}],"DIR. NO":[{"location":"DC Belem","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Castelao","pillars":{"GOPs":"NOK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Equatorial","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Fortaleza","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Imperatriz","pillars":{"GOPs":"NOK","Inventory":"NOK","Toolkits Segurança":"OK"}},{"location":"DC Natal","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}]}},"paises":{"pillars":["GOPs","Inventory","Toolkits Segurança"],"countries":{"Argentina":[{"location":"DC Cordoba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Mercado Central","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Rosario","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sante Fe","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Santos Lugares","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Tucuman","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}],"Bolivia":[{"location":"DC Cochabamba","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC El Alto","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Montero","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Oruro","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Potosi","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Santa Cruz (Bolivia)","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Sucre","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Tarija","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Trinidad","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}],"Paraguay":[{"location":"DC Asuncion","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Ciudad del Este","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Encarnacion","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Coronel Oviedo","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}},{"location":"DC Guarambare","pillars":{"GOPs":"OK","Inventory":"OK","Toolkits Segurança":"OK"}}]}}}};
+</script>
+<script>/* ============================================================
+   Farol de Autoavaliação — dashboard logic
+   All numbers are derived exclusively from DATA (extracted from
+   the two source workbooks). Nothing here is invented.
+   ============================================================ */
+
+
+function fmtPct(x){
+  if(x===null || x===undefined || isNaN(x)) return '—';
+  const v = Math.round(x*1000)/10; // one decimal
+  const isInt = Math.abs(v - Math.round(v)) < 0.05;
+  return (isInt ? Math.round(v) : v.toFixed(1)).toString().replace('.', ',');
+}
+function stateFor(pct){
+  if(pct===null) return 'na';
+  if(pct>=0.9) return 'good';
+  if(pct>=0.7) return 'warn';
+  return 'bad';
+}
+function fillClass(pct){
+  const s = stateFor(pct);
+  return s==='good' ? 'fill-good' : s==='warn' ? 'fill-warn' : 'fill-bad';
+}
+function strokeColor(pct){
+  const s = stateFor(pct);
+  return s==='good' ? '#2f8f63' : s==='warn' ? '#b8791f' : '#b8483f';
+}
+
+/* aggregate a list of {location, pillars:{p:status}} across a pillar list */
+function aggregate(locations, pillars){
+  let ok=0, nok=0, na=0;
+  const perPillar = {};
+  pillars.forEach(p=> perPillar[p] = {ok:0, nok:0, na:0});
+  locations.forEach(loc=>{
+    pillars.forEach(p=>{
+      const v = loc.pillars[p];
+      if(v==='OK'){ ok++; perPillar[p].ok++; }
+      else if(v==='NOK'){ nok++; perPillar[p].nok++; }
+      else { na++; perPillar[p].na++; }
+    });
+  });
+  const denom = ok+nok;
+  return { ok, nok, na, pct: denom>0 ? ok/denom : null, perPillar, total: locations.length };
+}
+
+function pillarPct(pp){
+  const denom = pp.ok+pp.nok;
+  return denom>0 ? pp.ok/denom : null;
+}
+
+/* -------------------------------------------------------------
+   Generic region-scoped module (used for Brasil GEOs and Países)
+   ------------------------------------------------------------- */
+function buildRegionModule(root, opts){
+  const { regionLabel, regions, pillars, unitPlural, gender, heatmap, shortPendencyLabel } = opts;
+  // regions: {name: locations[]}
+  const regionNames = Object.keys(regions);
+  let selected = new Set(regionNames); // all selected by default
+
+  // grammatical agreement helpers (regiões = feminine, países = masculine)
+  const artPl = gender==='m' ? 'os' : 'as';
+  const allWord = gender==='m' ? 'Todos' : 'Todas';
+  const selAdj = gender==='m' ? 'selecionados' : 'selecionadas';
+  const inWord = gender==='m' ? 'nos' : 'nas';
+
+  const heatmapBlock = heatmap ? `
+    <div class="card panel">
+      <h3>Matriz de cobertura por pilar</h3>
+      <p class="phint">Percentual de conformidade de cada pilar, aberto por ${regionLabel.toLowerCase()} — para localizar de relance onde concentrar esforço.</p>
+      <div class="heatwrap">
+        <div class="heatmap" id="heatmap-${opts.id}"></div>
+      </div>
+      <div class="legend">
+        <div class="li"><span class="sw" style="background:#2f8f63"></span>≥ 90%</div>
+        <div class="li"><span class="sw" style="background:#b8791f"></span>70–89%</div>
+        <div class="li"><span class="sw" style="background:#b8483f"></span>&lt; 70%</div>
+        <div class="li"><span class="sw" style="background:#9aa1ac"></span>Sem dado</div>
+      </div>
+    </div>
+  ` : '';
+
+  // flat list of every unit in this module (stable order/index, spans all
+  // regions) — index in this array doubles as the <option> value. The
+  // dropdown itself is (re)populated by renderUnitOptions(), filtered to
+  // whichever regions are currently selected via the chips.
+  const allUnits = [];
+  regionNames.forEach(rn=>{
+    regions[rn].forEach(loc=>{
+      allUnits.push({ location: loc.location, pillars: loc.pillars, region: rn });
+    });
+  });
+
+  root.innerHTML = `
+    <div class="filterbar">
+      <p class="flabel">Filtrar por ${regionLabel}</p>
+      <p class="fhint">Clique para ver só uma opção · Ctrl (⌘ no Mac) + clique para combinar várias</p>
+      <div class="chips" id="chips-${opts.id}"></div>
+      <div class="unitfilter">
+        <label class="ulabel" for="unitsel-${opts.id}">Ou busque uma unidade específica</label>
+        <select id="unitsel-${opts.id}" class="unitselect"></select>
+      </div>
+    </div>
+    <div class="toprow stagger">
+      <div class="card hero-card">
+        <div class="sweep"></div>
+        <div class="hero-top">
+          <div class="hero-label">% total de preenchimento<span id="hero-sub-${opts.id}"></span></div>
+        </div>
+        <div class="hero-num-wrap">
+          <div class="hero-num" id="hero-num-${opts.id}">—</div>
+        </div>
+        <p class="hero-foot" id="hero-foot-${opts.id}"></p>
+        <div class="hero-stats" id="hero-stats-${opts.id}"></div>
+      </div>
+      <div class="card panel toprow-panel">
+        <h3>Comparativo por ${regionLabel}</h3>
+        <p class="phint">${allWord} ${artPl} ${unitPlural} permanecem visíveis — a seleção apenas realça o filtro atual.</p>
+        <div class="barlist" id="barlist-${opts.id}"></div>
+      </div>
+      <div class="card panel toprow-panel">
+        <h3>Por pilar</h3>
+        <p class="phint">Percentual de conformidade por pilar, considerando a seleção atual.</p>
+        <div class="gaugegrid" id="gauges-${opts.id}"></div>
+      </div>
+    </div>
+
+    ${heatmapBlock}
+
+    <div class="card panel">
+      <h3>Unidades avaliadas</h3>
+      <p class="phint">Cada unidade, agrupada por ${regionLabel.toLowerCase()} — as que estão 100% aparecem enxutas, e as que têm pendência mostram o pilar exato.</p>
+      <div id="units-${opts.id}" class="units-scroll"></div>
+    </div>
+
+    <div class="card panel">
+      <h3>Pontos de atenção</h3>
+      <p class="phint">Itens marcados como NOK ${inWord} ${unitPlural} ${selAdj}.</p>
+      <div id="attn-${opts.id}" class="attn-scroll"></div>
+    </div>
+  `;
+
+  const chipsEl = root.querySelector(`#chips-${opts.id}`);
+  const heroNum = root.querySelector(`#hero-num-${opts.id}`);
+  const heroSub = root.querySelector(`#hero-sub-${opts.id}`);
+  const heroFoot = root.querySelector(`#hero-foot-${opts.id}`);
+  const heroStats = root.querySelector(`#hero-stats-${opts.id}`);
+  const barlist = root.querySelector(`#barlist-${opts.id}`);
+  const gauges = root.querySelector(`#gauges-${opts.id}`);
+  const units = root.querySelector(`#units-${opts.id}`);
+  const attn = root.querySelector(`#attn-${opts.id}`);
+  const heatmapEl = heatmap ? root.querySelector(`#heatmap-${opts.id}`) : null;
+  const unitSelectEl = root.querySelector(`#unitsel-${opts.id}`);
+  let unitFilterIdx = null; // index into allUnits, or null when no single unit is focused
+  let preUnitSelected = null; // region-chip selection to restore once the unit filter is cleared
+
+  // pre-compute each region's own (unfiltered) pct for the comparison chart
+  const ownStats = {};
+  regionNames.forEach(r=> ownStats[r] = aggregate(regions[r], pillars));
+
+  function renderHeatmap(){
+    if(!heatmapEl) return;
+    const sorted = [...regionNames].sort((a,b)=> (ownStats[b].pct ?? -1) - (ownStats[a].pct ?? -1));
+    const cols = `120px repeat(${pillars.length}, 1fr)`;
+    const head = `<div class="heat-row heat-head" style="grid-template-columns:${cols}">
+        <div class="heat-rowlabel"></div>
+        ${pillars.map(p=>`<div class="heat-collabel">${p}</div>`).join('')}
+      </div>`;
+    const rows = sorted.map(name=>{
+      const pp = ownStats[name].perPillar;
+      const cells = pillars.map(p=>{
+        const pct = pillarPct(pp[p]);
+        const st = pct===null ? 'na' : stateFor(pct);
+        return `<div class="heat-cell heat-${st}"><span>${pct===null?'—':fmtPct(pct)+'%'}</span></div>`;
+      }).join('');
+      return `<div class="heat-row" style="grid-template-columns:${cols}">
+        <div class="heat-rowlabel">${name}</div>
+        ${cells}
+      </div>`;
+    }).join('');
+    heatmapEl.innerHTML = head + rows;
+  }
+
+  function renderUnitOptions(){
+    // dropdown only lists units belonging to the currently selected region(s)
+    if(!unitSelectEl) return;
+    const optgroupsHtml = regionNames.filter(rn=> selected.has(rn)).map(rn=>{
+      const opts = allUnits
+        .map((u, idx)=> ({ u, idx }))
+        .filter(({u})=> u.region===rn)
+        .sort((a,b)=> a.u.location.localeCompare(b.u.location, 'pt-BR'))
+        .map(({u, idx})=> `<option value="${idx}">${u.location}</option>`)
+        .join('');
+      return opts ? `<optgroup label="${rn}">${opts}</optgroup>` : '';
+    }).join('');
+    unitSelectEl.innerHTML = `<option value="">Todas as unidades</option>${optgroupsHtml}`;
+    unitSelectEl.value = unitFilterIdx!==null ? String(unitFilterIdx) : '';
+  }
+
+  function renderChips(){
+    chipsEl.innerHTML = '';
+    regionNames.forEach(name=>{
+      const hasData = regions[name].length>0;
+      const isOn = selected.has(name);
+      const isLastOn = isOn && selected.size===1;
+      const btn = document.createElement('button');
+      btn.className = 'chip' + (isOn?' on':'') + (!hasData?' empty':'') + (isLastOn?' locked':'');
+      btn.innerHTML = `${name}<span class="n">${regions[name].length}</span>`;
+      btn.disabled = !hasData;
+      btn.addEventListener('click', (ev)=>{
+        if(!hasData) return;
+        const combine = ev.ctrlKey || ev.metaKey;
+        if(combine){
+          // Ctrl/Cmd+click: add or remove this one from the current multi-selection
+          if(isOn){
+            if(selected.size===1){
+              btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
+              return; // never allow reaching zero selection
+            }
+            selected.delete(name);
+          } else {
+            selected.add(name);
+          }
+        } else {
+          // plain click: focus on this one only, clearing the rest
+          selected = new Set([name]);
+        }
+        unitFilterIdx = null;
+        preUnitSelected = null;
+        if(unitSelectEl) unitSelectEl.value = '';
+        renderChips(); renderAll();
+      });
+      chipsEl.appendChild(btn);
+    });
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'chip chip-reset';
+    resetBtn.textContent = 'Todas';
+    resetBtn.addEventListener('click', ()=>{
+      selected = new Set(regionNames);
+      unitFilterIdx = null;
+      preUnitSelected = null;
+      if(unitSelectEl) unitSelectEl.value = '';
+      renderChips(); renderAll();
+    });
+    if(selected.size < regionNames.length) chipsEl.appendChild(resetBtn);
+    renderUnitOptions();
+  }
+
+  if(unitSelectEl){
+    unitSelectEl.addEventListener('change', ()=>{
+      const v = unitSelectEl.value;
+      if(v===''){
+        // back to "Todas as unidades": restore whatever region-chip selection
+        // was active before the unit-level drill-down started
+        unitFilterIdx = null;
+        selected = preUnitSelected ? new Set(preUnitSelected) : new Set(regionNames);
+        preUnitSelected = null;
+        renderChips();
+      } else {
+        if(unitFilterIdx === null){
+          // entering the drill-down for the first time — remember the prior state
+          preUnitSelected = new Set(selected);
+        }
+        unitFilterIdx = parseInt(v, 10);
+        selected = new Set([allUnits[unitFilterIdx].region]);
+        renderChips();
+      }
+      renderAll();
+    });
+  }
+
+  function animateNumber(el, target, isPct){
+    const start = 0; const dur = 900; const t0 = performance.now();
+    function step(t){
+      const p = Math.min(1, (t-t0)/dur);
+      const eased = 1 - Math.pow(1-p, 3);
+      const val = start + (target-start)*eased;
+      el.textContent = fmtPct(val) + (isPct?'%':'');
+      if(p<1) requestAnimationFrame(step);
+      else el.textContent = fmtPct(target) + (isPct?'%':'');
+    }
+    requestAnimationFrame(step);
+  }
+
+  function renderBarlist(){
+    barlist.innerHTML = '';
+    const sorted = [...regionNames].sort((a,b)=> (ownStats[b].pct ?? -1) - (ownStats[a].pct ?? -1));
+    sorted.forEach(name=>{
+      const st = ownStats[name];
+      const pct = st.pct;
+      const on = selected.has(name);
+      const row = document.createElement('div');
+      row.className = 'baritem' + (on ? '' : ' dim');
+      row.innerHTML = `
+        <div class="blabel">${name}</div>
+        <div class="btrack"><div class="bfill ${fillClass(pct)}" style="width:0%"></div></div>
+        <div class="bval">${pct===null?'—':fmtPct(pct)+'%'}</div>
+      `;
+      barlist.appendChild(row);
+      requestAnimationFrame(()=>{
+        const fill = row.querySelector('.bfill');
+        fill.style.width = (pct===null?0:pct*100) + '%';
+      });
+    });
+  }
+
+  function renderGauges(agg){
+    gauges.innerHTML = '';
+    pillars.forEach(p=>{
+      const pp = agg.perPillar[p];
+      const pct = pillarPct(pp);
+      const r = 24, circ = 2*Math.PI*r;
+      const wrap = document.createElement('div');
+      wrap.className = 'gauge';
+      wrap.innerHTML = `
+        <div class="gauge-center">
+          <svg viewBox="0 0 60 60" width="60" height="60">
+            <circle class="gtrack" cx="30" cy="30" r="${r}"></circle>
+            <circle class="gfill" cx="30" cy="30" r="${r}" stroke="${pct===null?'#9aa1ac':strokeColor(pct)}"
+              style="stroke-dasharray:${circ} ${circ}; stroke-dashoffset:${circ}"></circle>
+          </svg>
+          <div class="gauge-num">${pct===null?'—':fmtPct(pct)+'%'}</div>
+        </div>
+        <div class="gauge-label">${p}</div>
+      `;
+      gauges.appendChild(wrap);
+      const fillCircle = wrap.querySelector('.gfill');
+      const offset = pct===null ? circ : circ - pct*circ;
+      requestAnimationFrame(()=>{ fillCircle.style.strokeDashoffset = offset; });
+    });
+  }
+
+  function renderUnits(groups){
+    if(groups.length===0){ units.innerHTML=''; return; }
+    units.innerHTML = groups.map(g=>{
+      const cards = g.locs.map(loc=>{
+        const nokList = pillars.filter(p=> loc.pillars[p]==='NOK');
+        const naList = pillars.filter(p=> loc.pillars[p]!=='OK' && loc.pillars[p]!=='NOK');
+        const allOk = nokList.length===0;
+        return `
+          <div class="unit-card${allOk?'':' attn'}">
+            <div class="uname">${loc.location}</div>
+            ${allOk
+              ? `<div class="ustatus ok"><span class="udot"></span>Todos os pilares OK</div>`
+              : `<div class="ustatus nok"><span class="udot"></span>${shortPendencyLabel
+                    ? `${nokList.length} ${nokList.length===1?'pendência':'pendências'}`
+                    : `${nokList.length} ${nokList.length===1?'pilar':'pilares'} com pendência`}</div>
+                 <div class="uissues">${nokList.map(p=>`<span class="issue-chip">${p}</span>`).join('')}</div>`
+            }
+            ${naList.length ? `<div class="una">Não aplicável: ${naList.join(', ')}</div>` : ''}
+          </div>`;
+      }).join('');
+      return `
+        <div class="unit-group">
+          <div class="unit-group-h">${g.name}<span class="n">${g.locs.length}</span></div>
+          <div class="units-grid">${cards}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderAttention(groups){
+    const items = [];
+    groups.forEach(g=>{
+      g.locs.forEach(loc=>{
+        pillars.forEach(p=>{
+          if(loc.pillars[p]==='NOK'){
+            items.push({ location:loc.location, pillar:p, region:g.name });
+          }
+        });
+      });
+    });
+    if(items.length===0){
+      attn.innerHTML = `
+        <div class="empty-state">
+          <div class="ico">✓</div>
+          <b>Nenhum ponto de atenção</b>
+          <span>Todos os itens avaliados ${inWord} ${unitPlural} ${selAdj} estão OK.</span>
+        </div>`;
+      return;
+    }
+    attn.innerHTML = `<div class="attn-list">${items.map(it=>`
+      <div class="attn-item">
+        <div class="attn-dot"></div>
+        <div class="attn-txt"><b>${it.location}</b><span>${it.pillar} · ${it.region}</span></div>
+        <div class="attn-tag">NOK</div>
+      </div>`).join('')}</div>`;
+  }
+
+  function renderAll(){
+    const sel = [...selected];
+    const focusedUnit = unitFilterIdx!==null ? allUnits[unitFilterIdx] : null;
+    const groups = focusedUnit
+      ? [{ name: focusedUnit.region, locs: [focusedUnit] }]
+      : sel.map(name=>({ name, locs: regions[name] }));
+    const locs = groups.flatMap(g=>g.locs);
+    const agg = aggregate(locs, pillars);
+
+    if(agg.pct===null){
+      heroNum.textContent = '—'; heroNum.classList.add('empty');
+      heroFoot.textContent = `Sem dados para os filtros selecionados.`;
+    } else {
+      heroNum.classList.remove('empty');
+      animateNumber(heroNum, agg.pct, true);
+      if(focusedUnit){
+        heroFoot.textContent = `Unidade específica · ${focusedUnit.region}.`;
+      } else {
+        const locWord = agg.total===1 ? 'localidade avaliada' : 'localidades avaliadas';
+        heroFoot.textContent = `${sel.length===regionNames.length ? allWord+' '+artPl+' '+unitPlural : sel.length+' de '+regionNames.length+' '+unitPlural} ${selAdj} · ${agg.total} ${locWord}.`;
+      }
+    }
+    heroSub.innerHTML = focusedUnit
+      ? `<span>${focusedUnit.location}</span>`
+      : `<span>${sel.length===regionNames.length ? 'Visão geral' : sel.join(' · ')}</span>`;
+
+    heroStats.innerHTML = `
+      <div class="stat ok"><b>${agg.ok}</b><span>OK</span></div>
+      <div class="stat nok"><b>${agg.nok}</b><span>NOK</span></div>
+      <div class="stat na"><b>${agg.na}</b><span>N/A</span></div>
+      <div class="stat"><b>${agg.total}</b><span>Localidades</span></div>
+    `;
+
+    renderGauges(agg);
+    renderUnits(groups);
+    renderAttention(groups);
+    // refresh bar highlight (values are fixed / own, unaffected by filter)
+    [...barlist.children].forEach(row=>{
+      const name = row.querySelector('.blabel').textContent;
+      const isActive = focusedUnit ? name===focusedUnit.region : selected.has(name);
+      row.classList.toggle('dim', !isActive);
+    });
+  }
+
+  renderChips();
+  renderBarlist();
+  renderHeatmap();
+  renderAll();
+}
+
+/* -------------------------------------------------------------
+   LCP module (no filters — static per-BU pillar wall)
+   ------------------------------------------------------------- */
+function buildLcpModule(root, opts){
+  const { title, pillars } = opts;
+  let ok=0, nok=0, na=0;
+  pillars.forEach(p=>{
+    if(p.status==='OK') ok++;
+    else if(p.status==='NOK') nok++;
+    else na++;
+  });
+  const denom = ok+nok;
+  const pct = denom>0 ? ok/denom : null;
+
+  root.innerHTML = `
+    <div class="card hero-card lcp-hero">
+      <div class="sweep"></div>
+      <div class="hero-top">
+        <div class="hero-label">% de preenchimento — ${title}</div>
+      </div>
+      <div class="hero-num-wrap">
+        <div class="hero-num" id="lcp-num">—</div>
+      </div>
+      <p class="hero-foot">${pillars.length} pilares avaliados nesta unidade de negócio.</p>
+      <div class="hero-stats">
+        <div class="stat ok"><b>${ok}</b><span>OK</span></div>
+        <div class="stat nok"><b>${nok}</b><span>NOK</span></div>
+        <div class="stat na"><b>${na}</b><span>N/A</span></div>
+        <div class="stat"><b>${pillars.length}</b><span>Pilares</span></div>
+      </div>
+    </div>
+
+    <div class="card panel">
+      <h3>Pilares avaliados</h3>
+      <p class="phint">Todos os pilares da unidade — os que exigem atenção aparecem destacados.</p>
+      <div class="tagcloud">
+        ${pillars.map(p=>`<span class="tag ${p.status==='OK'?'ok':p.status==='NOK'?'nok':'na'}"><span class="sw"></span>${p.pillar}</span>`).join('')}
+      </div>
+      <div class="legend">
+        <div class="li"><span class="sw" style="background:#2f8f63"></span>OK</div>
+        <div class="li"><span class="sw" style="background:#b8483f"></span>NOK</div>
+        <div class="li"><span class="sw" style="background:#b8791f"></span>N/A (não aplicável)</div>
+      </div>
+    </div>
+  `;
+
+  const numEl = root.querySelector('#lcp-num');
+
+  function animateNumber(el, target){
+    const dur=900, t0=performance.now();
+    function step(t){
+      const p=Math.min(1,(t-t0)/dur); const eased=1-Math.pow(1-p,3);
+      el.textContent = fmtPct(target*eased)+'%';
+      if(p<1) requestAnimationFrame(step); else el.textContent = fmtPct(target)+'%';
+    }
+    requestAnimationFrame(step);
+  }
+
+  if(pct===null){ numEl.textContent='—'; numEl.classList.add('empty'); }
+  else{
+    animateNumber(numEl, pct);
+  }
+}
+
+/* -------------------------------------------------------------
+   Tabs
+   ------------------------------------------------------------- */
+function setupTabbar(container, onChange){
+  const buttons = [...container.querySelectorAll('button')];
+  const pill = container.querySelector('.pill');
+  function place(btn){
+    if(!pill) return;
+    pill.style.width = btn.offsetWidth + 'px';
+    pill.style.transform = `translateX(${btn.offsetLeft - 5}px)`;
+  }
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      buttons.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      place(btn);
+      onChange(btn.dataset.view || btn.dataset.sub);
+    });
+  });
+  const active = container.querySelector('button.active') || buttons[0];
+  requestAnimationFrame(()=> place(active));
+  window.addEventListener('resize', ()=>{
+    const a = container.querySelector('button.active');
+    if(a) place(a);
+  });
+}
+
+function replay(el){
+  el.classList.remove('enter');
+  el.querySelectorAll('.stagger').forEach(s=> s.classList.remove('stagger'));
+  void el.offsetWidth;
+  el.classList.add('enter');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Build DPO Brasil
+  buildRegionModule(document.getElementById('dpo-brasil'), {
+    id:'brasil', regionLabel:'Região', unitPlural:'regiões', gender:'f',
+    regions: DATA.dpo.brasil.geos, pillars: DATA.dpo.brasil.pillars
+  });
+  // Build DPO Paises
+  buildRegionModule(document.getElementById('dpo-paises'), {
+    id:'paises', regionLabel:'País', unitPlural:'países', gender:'m',
+    regions: DATA.dpo.paises.countries, pillars: DATA.dpo.paises.pillars
+  });
+  // Build LCP
+  buildLcpModule(document.getElementById('lcp-brasil'), { title:'BU Brasil', pillars: DATA.lcp.brasil });
+  buildLcpModule(document.getElementById('lcp-las'), { title:'BU LAS', pillars: DATA.lcp.las });
+
+  // Build GOPs e Toolkits — Brasil
+  buildRegionModule(document.getElementById('gt-brasil'), {
+    id:'gt-brasil', regionLabel:'Diretoria', unitPlural:'diretorias', gender:'f', heatmap:true, shortPendencyLabel:true,
+    regions: DATA.gt.brasil.geos, pillars: DATA.gt.brasil.pillars
+  });
+  // Build GOPs e Toolkits — Países
+  buildRegionModule(document.getElementById('gt-paises'), {
+    id:'gt-paises', regionLabel:'País', unitPlural:'países', gender:'m', heatmap:true, shortPendencyLabel:true,
+    regions: DATA.gt.paises.countries, pillars: DATA.gt.paises.pillars
+  });
+
+  // main tabs
+  setupTabbar(document.getElementById('mainTabs'), (view)=>{
+    document.querySelectorAll('.view').forEach(v=>{
+      v.classList.toggle('active', v.dataset.view===view);
+    });
+    const activeView = document.querySelector(`.view[data-view="${view}"]`);
+    replay(activeView);
+  });
+
+  // dpo sub tabs
+  setupTabbar(document.getElementById('dpoSubTabs'), (sub)=>{
+    const parent = document.querySelector('.view[data-view="dpo"]');
+    parent.querySelectorAll('.subview').forEach(v=>{
+      v.classList.toggle('active', v.dataset.sub===sub);
+    });
+    replay(parent.querySelector(`.subview[data-sub="${sub}"]`));
+  });
+
+  // lcp sub tabs
+  setupTabbar(document.getElementById('lcpSubTabs'), (sub)=>{
+    const parent = document.querySelector('.view[data-view="lcp"]');
+    parent.querySelectorAll('.subview').forEach(v=>{
+      v.classList.toggle('active', v.dataset.sub===sub);
+    });
+    replay(parent.querySelector(`.subview[data-sub="${sub}"]`));
+  });
+
+  // gt sub tabs
+  setupTabbar(document.getElementById('gtSubTabs'), (sub)=>{
+    const parent = document.querySelector('.view[data-view="gt"]');
+    parent.querySelectorAll('.subview').forEach(v=>{
+      v.classList.toggle('active', v.dataset.sub===sub);
+    });
+    replay(parent.querySelector(`.subview[data-sub="${sub}"]`));
+  });
+
+  // clock — real ticking time, small command-center touch
+  function tick(){
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    const ss = String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
+  }
+  tick(); setInterval(tick, 1000);
+});
+</script>
+</body>
+</html>
