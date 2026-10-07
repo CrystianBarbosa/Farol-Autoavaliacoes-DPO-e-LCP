@@ -455,7 +455,20 @@ footer.site{
 }
 footer.site .line{ width:38px; height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent); }
 
+/* celular: matriz cabe na tela (sem rolagem lateral) */
+@media (max-width:720px){
+  .heatmap{ min-width:0; --heat-label:84px; }
+  .heatwrap::after{ display:none; }
+  .heat-row{ gap:4px; }
+  .heat-rowlabel{ font-size:.72rem; padding-right:2px; }
+  .heat-collabel{ font-size:.6rem; letter-spacing:0; }
+  .heat-cell{ font-size:.72rem; height:32px; }
+}
+
 @media (max-width:520px){
+  /* celular: as tres abas dividem a largura, nenhuma fica escondida */
+  .tabbar{ display:flex; width:100%; }
+  .tabbar button{ flex:1 1 0; min-width:0; padding:8px 6px; font-size:.76rem; line-height:1.2; white-space:normal; text-align:center; }
   .baritem{ grid-template-columns:70px 1fr 50px; }
   .hero-card{ padding:26px 20px 22px; }
   .brand .mark{ letter-spacing:.13em; font-size:.66rem; }
@@ -553,6 +566,8 @@ const DATA = {"dpo":{"brasil":{"pillars":["People","Delivery","Fleet","Managemen
    the two source workbooks). Nothing here is invented.
    ============================================================ */
 
+/* phones/tablets: no mouse hover, finger pointer (no Ctrl key to combine filters) */
+const IS_TOUCH = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
 function fmtPct(x){
   if(x===null || x===undefined || isNaN(x)) return '—';
@@ -642,7 +657,9 @@ function buildRegionModule(root, opts){
   root.innerHTML = `
     <div class="filterbar">
       <p class="flabel">Filtrar por ${regionLabel}</p>
-      <p class="fhint">Clique para ver só uma opção · Ctrl (⌘ no Mac) + clique para combinar várias</p>
+      <p class="fhint">${IS_TOUCH
+        ? 'Toque para ver só uma opção · toque em outras para somar ou tirar · “Todas” volta ao total'
+        : 'Clique para ver só uma opção · Ctrl (⌘ no Mac) + clique para combinar várias'}</p>
       <div class="chips" id="chips-${opts.id}"></div>
       <div class="unitfilter">
         <label class="ulabel" for="unitsel-${opts.id}">Ou busque uma unidade específica</label>
@@ -709,7 +726,7 @@ function buildRegionModule(root, opts){
   function renderHeatmap(){
     if(!heatmapEl) return;
     const sorted = [...regionNames].sort((a,b)=> (ownStats[b].pct ?? -1) - (ownStats[a].pct ?? -1));
-    const cols = `120px repeat(${pillars.length}, 1fr)`;
+    const cols = `var(--heat-label, 120px) repeat(${pillars.length}, minmax(0, 1fr))`;
     const head = `<div class="heat-row heat-head" style="grid-template-columns:${cols}">
         <div class="heat-rowlabel"></div>
         ${pillars.map(p=>`<div class="heat-collabel">${p}</div>`).join('')}
@@ -757,7 +774,8 @@ function buildRegionModule(root, opts){
       btn.disabled = !hasData;
       btn.addEventListener('click', (ev)=>{
         if(!hasData) return;
-        const combine = ev.ctrlKey || ev.metaKey;
+        // touch screens have no Ctrl: after the first tap narrows the view, further taps combine
+        const combine = ev.ctrlKey || ev.metaKey || (IS_TOUCH && selected.size < regionNames.length);
         if(combine){
           // Ctrl/Cmd+click: add or remove this one from the current multi-selection
           if(isOn){
