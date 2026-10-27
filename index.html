@@ -1160,9 +1160,8 @@ function buildOverviewModule(root, opts){
       <div class="ov-kpis">
         <div class="ov-kpi big"><b class="c-${stateFor(tot.pct)}">${pctTxt(tot)}</b><span>Preenchimento</span></div>
         <div class="ov-kpi"><b>${all.length}</b><span>Unidades</span></div>
-        <div class="ov-kpi ok"><b>${tot.ok}</b><span>Pilares OK</span></div>
-        <div class="ov-kpi nok"><b>${tot.nok}</b><span>Pilares NOK</span></div>
-        <div class="ov-kpi${unitsNok ? ' nok' : ''}"><b>${unitsNok}</b><span>Unid. c/ pendência</span></div>
+        <div class="ov-kpi ok"><b>${all.length - unitsNok}</b><span>Unidades OK</span></div>
+        <div class="ov-kpi nok"><b>${unitsNok}</b><span>Unidades NOK</span></div>
       </div>
     </div>`;
 
