@@ -449,6 +449,52 @@ header.top{
 .heat-cell.heat-bad{ background:rgba(184,72,63,.14); border-color:rgba(184,72,63,.35); color:var(--bad); }
 .heat-cell.heat-na{ background:rgba(20,26,38,.045); border-color:var(--border-soft); color:var(--text-low); }
 
+/* ---------- visao geral (todas as unidades x pilares) ---------- */
+.ov-sheet{ padding:20px 22px 18px; }
+.ov-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; padding-bottom:14px; margin-bottom:16px; border-bottom:1px solid var(--border-soft); }
+.ov-head h2{ margin:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.15rem; color:var(--text-hi); }
+.ov-head .ov-sub{ font-size:.76rem; color:var(--text-low); margin-top:3px; }
+.ov-kpis{ display:flex; gap:20px; align-items:flex-end; flex-wrap:wrap; }
+.ov-kpi{ display:flex; flex-direction:column; gap:1px; }
+.ov-kpi b{ font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:600; color:var(--text-hi); font-variant-numeric:tabular-nums; }
+.ov-kpi span{ font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text-low); }
+.ov-kpi.big b{ font-size:2rem; line-height:1; }
+.ov-kpi.nok b{ color:var(--bad); }
+.ov-kpi.ok b{ color:var(--good); }
+.c-good{ color:var(--good) !important; } .c-warn{ color:var(--warn) !important; } .c-bad{ color:var(--bad) !important; } .c-na{ color:var(--text-low) !important; }
+.ov-badge{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.78rem; padding:2px 9px; border-radius:999px; font-variant-numeric:tabular-nums; }
+.ov-badge.good{ background:rgba(47,143,99,.13); color:var(--good-dim); }
+.ov-badge.warn{ background:rgba(184,121,31,.14); color:#8a5c17; }
+.ov-badge.bad{ background:rgba(184,72,63,.13); color:var(--bad); }
+.ov-badge.na{ background:rgba(20,26,38,.06); color:var(--text-low); }
+.ov-legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:.7rem; color:var(--text-low); margin-top:12px; }
+.ov-legend i{ font-style:normal; font-weight:700; color:var(--text-mid); }
+
+/* um quadro por diretoria/pais, como no Excel */
+.ov1{ columns:3 330px; column-gap:16px; }
+.ov1-card{ break-inside:avoid; margin-bottom:16px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.7); overflow:hidden; }
+.ov1-h{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 12px; background:linear-gradient(120deg, rgba(79,111,147,.12), rgba(138,124,168,.10)); }
+.ov1-h b{ font-family:'Space Grotesk',sans-serif; font-size:.84rem; letter-spacing:.04em; color:var(--text-hi); }
+.ov1-t{ width:100%; border-collapse:collapse; table-layout:fixed; }
+.ov1-t th{ font-size:.6rem; font-weight:700; letter-spacing:.04em; color:var(--text-low); padding:6px 0 4px; text-align:center; }
+.ov1-t th:first-child{ width:45%; }
+.ov1-t td{ padding:2px 1px; text-align:center; border-top:1px solid var(--border-soft); }
+.ov1-t td.u{ text-align:left; padding:4px 6px 4px 12px; font-size:.74rem; font-weight:600; color:var(--text-mid); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.st{ display:inline-block; min-width:30px; font-size:.64rem; font-weight:800; padding:2px 3px; border-radius:6px; }
+.st.ok{ color:var(--good-dim); background:rgba(47,143,99,.12); }
+.st.nok{ color:#fff; background:var(--bad); }
+.st.na, .st.vazio{ color:var(--text-low); background:rgba(20,26,38,.05); font-weight:600; }
+.ov1-t tr.has-nok td.u{ color:var(--bad); }
+
+@media (max-width:520px){
+  .ov-sheet{ padding:16px 12px 14px; }
+  .ov-kpis{ gap:14px; }
+  .ov1-t th:first-child{ width:36%; }
+  .ov1-t td.u{ font-size:.68rem; padding-left:8px; }
+  .ov1-t th{ font-size:.52rem; letter-spacing:0; }
+  .st{ min-width:0; width:100%; font-size:.54rem; padding:2px 0; }
+}
+
 footer.site{
   position:relative; z-index:1; text-align:center; margin-top:16px; color:var(--text-low); font-size:.76rem;
   display:flex; flex-direction:column; gap:6px; align-items:center;
@@ -466,9 +512,9 @@ footer.site .line{ width:38px; height:1px; background:linear-gradient(90deg, tra
 }
 
 @media (max-width:520px){
-  /* celular: as tres abas dividem a largura, nenhuma fica escondida */
+  /* celular: as quatro abas dividem a largura, nenhuma fica escondida */
   .tabbar{ display:flex; width:100%; }
-  .tabbar button{ flex:1 1 0; min-width:0; padding:8px 6px; font-size:.76rem; line-height:1.2; white-space:normal; text-align:center; }
+  .tabbar button{ flex:1 1 0; min-width:0; padding:8px 3px; font-size:.68rem; line-height:1.2; white-space:normal; text-align:center; }
   .baritem{ grid-template-columns:70px 1fr 50px; }
   .hero-card{ padding:26px 20px 22px; }
   .brand .mark{ letter-spacing:.13em; font-size:.66rem; }
@@ -502,6 +548,7 @@ footer.site .line{ width:38px; height:1px; background:linear-gradient(90deg, tra
     <div class="tabbar" id="mainTabs">
       <span class="pill" id="mainPill"></span>
       <button data-view="dpo" class="active">Autoavaliação DPO</button>
+      <button data-view="ov">Visão geral DPO</button>
       <button data-view="lcp">Autoavaliação LCP</button>
       <!-- para ocultar fora do periodo de atualizacao de GOPs/Toolkits, coloque o atributo "hidden" -->
       <button data-view="gt">GOPs e Toolkits</button>
@@ -521,6 +568,19 @@ footer.site .line{ width:38px; height:1px; background:linear-gradient(90deg, tra
     <div class="subview active" data-sub="brasil" id="dpo-brasil"></div>
     <!-- Países -->
     <div class="subview" data-sub="paises" id="dpo-paises"></div>
+  </section>
+
+  <!-- ============ VISAO GERAL DPO (todas as unidades numa tela, para print) ============ -->
+  <section class="view" data-view="ov">
+    <div class="tabs-row">
+      <div class="subtabbar" id="ovSubTabs">
+        <button data-sub="brasil" class="active">Brasil</button>
+        <button data-sub="paises">Países</button>
+      </div>
+    </div>
+
+    <div class="subview active" data-sub="brasil" id="ov-brasil"></div>
+    <div class="subview" data-sub="paises" id="ov-paises"></div>
   </section>
 
   <!-- ============ LCP VIEW ============ -->
@@ -1067,6 +1127,67 @@ function buildLcpModule(root, opts){
 }
 
 /* -------------------------------------------------------------
+   Visão geral: todas as unidades x pilares numa tela (para print),
+   um quadro por diretoria/país, como no Excel.
+   ------------------------------------------------------------- */
+const PILLAR_ABBR = { People:'PEO', Delivery:'DEL', Fleet:'FLE', Management:'MAN', Planning:'PLA', Safety:'SAF', Warehouse:'WAR' };
+function abbr(p){ return PILLAR_ABBR[p] || p.slice(0,3).toUpperCase(); }
+function cellKind(v){ return v==='OK' ? 'ok' : v==='NOK' ? 'nok' : v==='N/A' ? 'na' : 'vazio'; }
+function cellText(v){ return v==='OK' || v==='NOK' || v==='N/A' ? v : '—'; }
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function hasNok(u, pillars){ return pillars.some(p=> u.pillars[p]==='NOK'); }
+
+function buildOverviewModule(root, opts){
+  const { title, regions, pillars } = opts;
+  const names = Object.keys(regions);
+  const all = names.flatMap(n=> regions[n]);
+  const tot = aggregate(all, pillars);
+  const unitsNok = all.filter(u=> hasNok(u, pillars)).length;
+  const periodo = (document.querySelector('.meta .period')?.textContent || '').split('·').pop().trim();
+  const selo = (document.querySelector('.meta .updated')?.textContent || '').trim();
+  const regAgg = {};
+  names.forEach(n=> regAgg[n] = aggregate(regions[n], pillars));
+  const pctTxt = a => a.pct===null ? '—' : fmtPct(a.pct)+'%';
+  const badge = a => `<span class="ov-badge ${stateFor(a.pct)}">${pctTxt(a)}</span>`;
+  const legendPillars = pillars.map(p=> `<span><i>${abbr(p)}</i> ${p}</span>`).join('');
+
+  const head = `
+    <div class="ov-head">
+      <div>
+        <h2>${esc(title)}</h2>
+        <div class="ov-sub">Período de referência · ${esc(periodo)}<br>${esc(selo)}</div>
+      </div>
+      <div class="ov-kpis">
+        <div class="ov-kpi big"><b class="c-${stateFor(tot.pct)}">${pctTxt(tot)}</b><span>Preenchimento</span></div>
+        <div class="ov-kpi"><b>${all.length}</b><span>Unidades</span></div>
+        <div class="ov-kpi ok"><b>${tot.ok}</b><span>Pilares OK</span></div>
+        <div class="ov-kpi nok"><b>${tot.nok}</b><span>Pilares NOK</span></div>
+        <div class="ov-kpi${unitsNok ? ' nok' : ''}"><b>${unitsNok}</b><span>Unid. c/ pendência</span></div>
+      </div>
+    </div>`;
+
+  const tables = `<div class="ov1">${names.map(n=> `
+      <div class="ov1-card">
+        <div class="ov1-h"><b>${esc(n)}</b>${badge(regAgg[n])}</div>
+        <table class="ov1-t">
+          <thead><tr><th></th>${pillars.map(p=> `<th title="${esc(p)}">${abbr(p)}</th>`).join('')}</tr></thead>
+          <tbody>${regions[n].map(u=> `
+            <tr class="${hasNok(u, pillars) ? 'has-nok' : ''}"><td class="u" title="${esc(u.location)}">${esc(u.location)}</td>${
+              pillars.map(p=> `<td><span class="st ${cellKind(u.pillars[p])}">${cellText(u.pillars[p])}</span></td>`).join('')}</tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`).join('')}
+    </div>
+    <div class="ov-legend">${legendPillars}</div>`;
+
+  root.innerHTML = `
+    <div class="card ov-sheet">
+      ${head}
+      ${tables}
+    </div>`;
+}
+
+/* -------------------------------------------------------------
    Tabs
    ------------------------------------------------------------- */
 function setupTabbar(container, onChange){
@@ -1111,6 +1232,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
     id:'paises', regionLabel:'País', unitPlural:'países', gender:'m',
     regions: DATA.dpo.paises.countries, pillars: DATA.dpo.paises.pillars
   });
+  // Visão geral DPO (todas as unidades numa tela)
+  buildOverviewModule(document.getElementById('ov-brasil'), {
+    title:'Autoavaliação DPO · Brasil',
+    regions: DATA.dpo.brasil.geos, pillars: DATA.dpo.brasil.pillars
+  });
+  buildOverviewModule(document.getElementById('ov-paises'), {
+    title:'Autoavaliação DPO · Países',
+    regions: DATA.dpo.paises.countries, pillars: DATA.dpo.paises.pillars
+  });
   // Build LCP
   buildLcpModule(document.getElementById('lcp-brasil'), { title:'BU Brasil', pillars: DATA.lcp.brasil });
   buildLcpModule(document.getElementById('lcp-las'), { title:'BU LAS', pillars: DATA.lcp.las });
@@ -1144,6 +1274,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
     replay(parent.querySelector(`.subview[data-sub="${sub}"]`));
   });
 
+  // visão geral sub tabs
+  setupTabbar(document.getElementById('ovSubTabs'), (sub)=>{
+    const parent = document.querySelector('.view[data-view="ov"]');
+    parent.querySelectorAll('.subview').forEach(v=>{
+      v.classList.toggle('active', v.dataset.sub===sub);
+    });
+    replay(parent.querySelector(`.subview[data-sub="${sub}"]`));
+  });
   // lcp sub tabs
   setupTabbar(document.getElementById('lcpSubTabs'), (sub)=>{
     const parent = document.querySelector('.view[data-view="lcp"]');
