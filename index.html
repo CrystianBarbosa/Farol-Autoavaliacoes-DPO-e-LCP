@@ -1354,9 +1354,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   /* ---------------- estilos ---------------- */
   const css = `
-  .fa-open{ margin-top:10px; font:600 .74rem/1 'Inter',sans-serif; color:var(--text-low); background:none; border:1px solid var(--border);
-    border-radius:999px; padding:8px 14px; cursor:pointer; letter-spacing:.02em; }
-  .fa-open:hover{ color:var(--accent-a); border-color:rgba(79,111,147,.35); }
+  .fa-toprow{ display:flex; align-items:center; gap:12px; }
+  .fa-open{ display:inline-flex; align-items:center; gap:6px; font:600 .72rem/1 'Inter',sans-serif; color:var(--accent-a);
+    background:rgba(255,255,255,.7); border:1px solid rgba(79,111,147,.28); border-radius:999px; padding:7px 12px; cursor:pointer;
+    letter-spacing:.02em; white-space:nowrap; transition:background .2s, border-color .2s; }
+  .fa-open:hover{ background:#fff; border-color:rgba(79,111,147,.5); }
+  .fa-open svg{ width:13px; height:13px; flex:none; }
+  @media (max-width:520px){ .fa-toprow{ flex-direction:row-reverse; } }
   .fa-back{ position:fixed; inset:0; z-index:50; background:rgba(28,33,43,.38); display:flex; align-items:flex-start; justify-content:center;
     padding:24px 16px; overflow-y:auto; }
   .fa-back[hidden]{ display:none; }
@@ -1559,9 +1563,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   function montarTela(){
     const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
-    const foot = document.querySelector('footer.site');
-    const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'fa-open'; bt.textContent = 'Atualizar dados do farol';
-    (foot || document.body).appendChild(bt);
+    // botao no topo, ao lado do relogio (pedido do Crystian em 06/11/2026; no rodape ficou ruim)
+    const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'fa-open';
+    bt.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5M4.5 6 8 2.5 11.5 6M2.5 10.5v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/></svg>Atualizar dados';
+    bt.title = 'Atualizar dados do farol';
+    const relogio = document.getElementById('clock');
+    if(relogio){
+      const linha = document.createElement('div'); linha.className = 'fa-toprow';
+      relogio.parentNode.insertBefore(linha, relogio);
+      linha.append(bt, relogio);
+    } else (document.querySelector('footer.site') || document.body).appendChild(bt);
     const back = document.createElement('div'); back.className = 'fa-back'; back.hidden = true;
     back.innerHTML = `
     <div class="fa-box" role="dialog" aria-modal="true" aria-labelledby="fa-t">
