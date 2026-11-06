@@ -1758,7 +1758,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
       try {
         const r = await fetch(PUB.site + '?t=' + Date.now(), { cache:'no-store' });
         if(r.ok && (await r.text()).includes('Última atualização do farol · ' + selo)){
-          msg(`Pronto: o site já mostra os dados novos (selo “${esc(selo)}”). <a href="${esc(PUB.site)}">Recarregar o painel</a>`, 'ok');
+          // o "?v=" obriga o navegador a buscar a versao nova (senao mostra a pagina antiga guardada)
+          msg(`Pronto: o site já mostra os dados novos (selo “${esc(selo)}”). <a href="${esc(PUB.site + '?v=' + Date.now())}"><b>Clique aqui para ver o painel atualizado</b></a>`, 'ok');
           return;
         }
       } catch(e){}
